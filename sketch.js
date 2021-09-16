@@ -6,8 +6,10 @@ w = canvas.width;
 h = canvas.height;
 var c = canvas.getContext('2d');
 
-// ---classes
+alpha = 10;
 
+
+// ---classes
 function Particle(x, y, r){
     this.pos = [x, y]
 
@@ -102,8 +104,8 @@ function Grid(size){
     }
 }
 
-// ---declare
 
+// ---declare
 var particles = []
 for(var i = 0; i<10; i++){
     var x = Math.random()*w;
@@ -111,8 +113,8 @@ for(var i = 0; i<10; i++){
     particles.push(new Particle(x, y, 20));
 }
 
-// ---funcs
 
+// ---funcs
 function dist(v1, v2){
     dx = v1[0] - v2[0];
     dy = v1[1] - v2[1];
@@ -120,26 +122,28 @@ function dist(v1, v2){
     
     return Math.sqrt(sum);
 }
-function angle(v1, v2){
-
+function inv_vec(v1, v2){
+    dx = v2[0] - v1[0];
+    dy = v2[1] - v1[1];
+    return [dx*-1, dy*-1];
 }
 function collision_simple(objs){
     for(var i = 0; i<objs.length; i++){
         for(var j = 0; j<objs.length; j++){
             if(i == j){ continue; }
 
-            radsum = objs[i].r + objs[j].r
-            if(dist(objs[i].pos, objs[j].pos) < radsum){
+            radsum = objs[i].r + objs[j].r;
+            if(dist(objs[i].pos, objs[j].pos) <= radsum){
 
-                aoc = angle(objs[i].pos, objs[j].pos)
-
+                inv_aoc = inv_vec(objs[i].pos, objs[j].pos);
+                objs[i].acc = inv_aoc*alpha;
             }
         }
     }
 }
 
-// ---animate
 
+// ---animate
 function animate(){
     requestAnimationFrame(animate);
     c.clearRect(0, 0, w, h)
