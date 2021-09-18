@@ -151,7 +151,6 @@ canvas.addEventListener('mouseover', (event) => {
     scalar = (Math.pow(10, 3.5));
     for(var i = 0; i<particles.length; i++){
         dir = Vector2D.sub(mouse, particles[i].pos);
-        console.log("\n", dir);
         d = dir.mag();
         attract = (g * particles[i].m * mouse_w) / scalar*(d * d);
 
