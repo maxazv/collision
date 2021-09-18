@@ -8,7 +8,7 @@ h = canvas.height;
 
 var c = canvas.getContext('2d');
 
-pop = 10
+pop = 15;
 
 
 // ---classes
