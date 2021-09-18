@@ -104,8 +104,26 @@ function collision_simple(objs, j){
         }
     }
 }
-function randint(min, max) {
+function randint(min, max){
     return Math.random() * (max - min) + min;
+}
+function gradient(steps, grad, rgba){
+    loc = y / steps
+    cop = rgba;
+    for(var i = 0; i<steps; i++){
+        s = steps-i;
+        s = i
+        current = []
+        var startY = loc*i;
+        var endY = loc*(i+1);
+        current.push(String(rgba[0] * (s*grad)));
+        current.push(String(rgba[1] * (s*grad)));
+        current.push(String(rgba[2] * (s*grad)));
+        color = 'rgba(' + current[0] + ', ' + current[1] + ', ' + current[2] + ', ' + 1 + ')';
+
+        c.fillStyle = color;
+        c.fillRect(0, startY, w, endY);
+    }
 }
 
 
@@ -121,13 +139,16 @@ grav = new Vector2D(0, 0.1)
 // ---animate
 function animate(){
     requestAnimationFrame(animate);
+    c.beginPath();
+    //rgb = [8, 4, 15];
+    //gradient(100, 0.03, rgb);
     c.fillStyle = 'rgba(8, 4, 18, 0.4)'
     c.fillRect(0, 0, w, h)
 
     for(var i = 0; i<particles.length; i++){
         particles[i].apply_force(grav)
         particles[i].update();
-        
+
         if(particles[i].edge()){
             friction_force = -1
             friction = particles[i].vel.normalise();
