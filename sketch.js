@@ -25,18 +25,19 @@ function Particle(x, y, r){
 
     this.draw = function(){
         c.beginPath();
-        c.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-        c.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        c.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        c.fillStyle = 'rgba(255, 255, 255, 0.7)';
         c.arc(this.pos.x, this.pos.y, this.r, 0, Math.PI*2, false);
         c.stroke();
         c.fill();
-        this.glow(47, 23, 0.4*this.r*0.025);
+        this.glow(47, 23, 0.09, this.r*0.005);
     }
-    this.glow = function(steps, glow, size){
+    this.glow = function(steps, glow, gradient, size){
         for(var i = 0; i<steps; i++){
+            l = (steps-i)*gradient
             c.beginPath();
-            opacity = 0.75 / (i*glow);
-            rgb = "rgba(220, 190, 230, " + String(opacity) + ")";
+            opacity = 0.7 / ((i/l)*glow);
+            rgb = "rgba(220, 150, 230, " + String(opacity) + ")";
             c.fillStyle = rgb;
             c.arc(this.pos.x, this.pos.y, this.r*(i*size), 0, Math.PI*2, false);
             c.fill();
@@ -44,8 +45,8 @@ function Particle(x, y, r){
     }
 
     this.apply_force = function(force){
-        force.div(this.m)
-        this.acc.add(force);
+        var f = Vector2D.div(force, this.m);
+        this.acc.add(f);
     }
     this.update = function(){
         this.vel.add(this.acc);

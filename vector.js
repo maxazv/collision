@@ -40,4 +40,10 @@ class Vector2D{
         var dir = Vector2D.sub(v2, v1);
         return dir.mag();
     }
+    static div_vect(v1, v2){
+        return Vector2D(v1.x/v2.x, v1.y/v2.y);
+    }
+    static div(v1, scalar){
+        return new Vector2D(v1.x/scalar, v1.y/scalar);
+    }
 }
