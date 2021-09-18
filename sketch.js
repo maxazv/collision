@@ -3,8 +3,8 @@ var canvas = document.querySelector('canvas');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-w = canvas.width;
-h = canvas.height;
+var w = window.innerWidth;
+var h = window.innerHeight;
 
 var c = canvas.getContext('2d');
 
@@ -135,7 +135,16 @@ for(var i = 0; i<pop; i++){
     particles.push(new Particle(x, y, 20));
 }
 
-grav = new Vector2D(0, 0.1)
+grav = new Vector2D(0, 0.4)
+
+canvas.addEventListener('mousedown', () => {
+    for(var i = 0; i<particles.length; i++){
+        acc = new Vector2D(randint(-2, 2), -30);
+        particles[i].apply_force(acc);
+        console.log('hi');
+    }
+});
+
 // ---animate
 function animate(){
     requestAnimationFrame(animate);
