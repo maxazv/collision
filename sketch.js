@@ -117,6 +117,7 @@ for(var i = 0; i<pop; i++){
     particles.push(new Particle(x, y, 20));
 }
 
+grav = new Vector2D(0, 0.1)
 // ---animate
 function animate(){
     requestAnimationFrame(animate);
@@ -124,9 +125,9 @@ function animate(){
     c.fillRect(0, 0, w, h)
 
     for(var i = 0; i<particles.length; i++){
-        grav = new Vector2D(0, 0.1)
         particles[i].apply_force(grav)
         particles[i].update();
+        
         if(particles[i].edge()){
             friction_force = -1
             friction = particles[i].vel.normalise();
@@ -135,6 +136,7 @@ function animate(){
             particles[i].apply_force(friction)
         }
         particles[i].draw();
+
         collision_simple(particles, i);
     }
 }
