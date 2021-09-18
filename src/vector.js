@@ -56,4 +56,11 @@ class Vector2D{
         var dir = Vector2D.sub(v2, v1);
         return dir.mag();
     }
+    static colliding(v1, v2, radsum){
+        dir = Vector2D.sub(v2, v1);
+        if(dir.mag() <= radsum){
+            return true;
+        }
+        return false;
+    }
 }

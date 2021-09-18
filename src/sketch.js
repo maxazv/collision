@@ -1,4 +1,3 @@
-// ---init
 var canvas = document.querySelector('canvas');
 
 var scale = 600;
@@ -15,10 +14,10 @@ pop = 15;
 // ---funcs
 function collision_simple(objs, j){
     for(var i = 0; i<objs.length; i++){
-        if(i == j || this.marked){ continue; }
+        if(i == j){ continue; }
 
         radsum = objs[i].r + objs[j].r;
-        if(Vector2D.dir(objs[i].pos, objs[j].pos) <= radsum){
+        if(Vector2D.colliding(objs[i].pos, objs[j].pos, radsum)){
 
             aoc = Vector2D.sub(objs[j].pos, objs[i].pos);
             repell_force = 0.1;
@@ -28,8 +27,6 @@ function collision_simple(objs, j){
 
             aoc.mult(-1);
             objs[i].apply_force(aoc);
-
-            objs[j].marked = true;
         }
     }
 }
@@ -64,11 +61,13 @@ friction_force = -0.08;
 
 var particles = []
 for(var i = 0; i<pop; i++){
-    var x = Math.random()*(_w-40);
-    var y = Math.random()*(_h-40);
+    var x = Math.random() * (_w-40);
+    var y = Math.random() * (_h-40);
     particles.push(new Particle(x, y, 20));
 }
 
+
+// ---events
 canvas.addEventListener('dblclick', () => {
     for(var i = 0; i<particles.length; i++){
         acc = new Vector2D(randint(-2, 2), -30);
@@ -76,7 +75,7 @@ canvas.addEventListener('dblclick', () => {
         console.log('hi');
     }
 });
-canvas.addEventListener('mouseover', (event) => {
+canvas.addEventListener('mousedown', (event) => {
     mouse = new Vector2D(event.clientX, event.clientY)
     mouse_w = 10;
 
@@ -93,6 +92,7 @@ canvas.addEventListener('mouseover', (event) => {
         this.particles[i].apply_force(dir);
     }
 });
+
 
 // ---animate
 function animate(){
