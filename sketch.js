@@ -1,13 +1,14 @@
 // ---init
 var canvas = document.querySelector('canvas');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 w = canvas.width;
 h = canvas.height;
+
 var c = canvas.getContext('2d');
 
-alpha = 0.1;
-alpha_acc = 0.005;
+pop = 10
 
 
 // ---classes
@@ -87,8 +88,9 @@ function dist(v1, v2){
 function inv_vec(v1, v2){
     dx = v2[0] - v1[0];
     dy = v2[1] - v1[1];
-    // should be normalised
-    return [dx*-1*alpha, dy*-1*alpha];
+    repell_force = 0.1;
+
+    return [dx*repell_force, dy*repell_force];
 }
 function collision_simple(objs, j){
     for(var i = 0; i<objs.length; i++){
@@ -98,13 +100,12 @@ function collision_simple(objs, j){
         if(dist(objs[i].pos, objs[j].pos) <= radsum){
 
             inv_aoc = inv_vec(objs[i].pos, objs[j].pos);
-            objs[i].apply_force(inv_aoc)
+            objs[j].apply_force(inv_aoc)
             inv_aoc[0] *= -1
             inv_aoc[1] *= -1
-            objs[j].apply_force(inv_aoc)
+            objs[i].apply_force(inv_aoc)
 
             objs[j].marked = true;
-            //objs[i].vel = inv_aoc;
         }
     }
 }
@@ -115,7 +116,7 @@ function randint(min, max) {
 
 // ---declare
 var particles = []
-for(var i = 0; i<10; i++){
+for(var i = 0; i<pop; i++){
     var x = Math.random()*(w-40);
     var y = Math.random()*(h-40);
     particles.push(new Particle(x, y, 20));
