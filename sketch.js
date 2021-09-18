@@ -6,7 +6,8 @@ w = canvas.width;
 h = canvas.height;
 var c = canvas.getContext('2d');
 
-alpha = 10;
+alpha = 0.1;
+alpha_acc = 0.005;
 
 
 // ---classes
@@ -15,8 +16,11 @@ function Particle(x, y, r){
 
     this.vel = [2, 0];
     this.acc = [0, 0];
+    this.m = randint(0.5, 1);
 
-    this.r = r;
+    this.r = r*this.m;
+
+    this.marked = false;
 
     this.draw = function(){
         c.beginPath();
@@ -24,97 +28,55 @@ function Particle(x, y, r){
         c.stroke();
     }
 
+    this.apply_force = function(force){
+        this.acc[0] += force[0]/this.m;
+        this.acc[1] += force[1]/this.m;
+    }
     this.update = function(){
+        this.vel[0] += this.acc[0];
+        this.vel[1] += this.acc[1];
+        this.acc[0] = 0;
+        this.acc[1] = 0;
+
         this.pos[0] += this.vel[0];
         this.pos[1] += this.vel[1];
     }
 
     this.edge = function(){
         if(this.pos[0]+this.r > w){
+            this.pos[0] = w - this.r;
             this.vel[0] *= -1;
-            return;
+            return true;
         }
         if(this.pos[0]-this.r < 0){
+            this.pos[0] = this.r;
             this.vel[0] *= -1;
-            return;
+            return true;
         }
-        if(this.pos[1]+this.r > w){
+        if(this.pos[1]+this.r > h){
+            this.pos[1] = h - this.r;
             this.vel[1] *= -1;
-            return;
+            return true;
         }
         if(this.pos[1]-this.r < 0){
+            this.pos[1] = this.r;
             this.vel[1] *= -1;
-            return;
+            return true;
         }
-    }
-}
-
-function Grid(size){
-    this.size = size;
-    this.grids = []; // [[edges], content...]
-
-    this.init = function(){
-        stepX = innerWidth/this.size;
-        stepY = innerHeight/this.size;
-        for(var i = 0; i<this.size; i++){
-            for(var j = 0; j<this.size; j++){
-                grid = []
-
-                a = (stepX/2);
-                ctrX = stepX*i - a;
-                ctrY = stepY*j - a;
-                
-                edges = [
-                    [ctrX-a, ctrY-a],
-                    [ctrX+a, ctrY-a],
-                    [ctrX+a, ctrY+a],
-                    [ctrX-a, ctrY+a]
-                ];
-
-                grid.push(edges);
-                this.grids.push(grid);
-            }
-        }
-    }
-    this.init();
-
-    this.in_grid = function(edges, pos){
-        if (pos[0] > edges[0][0] && pos[1] > edges[0][1] &&
-            pos[0] < edges[1][0] && pos[1] > edges[1][1] &&
-            pos[0] < edges[2][0] && pos[1] < edges[2][1] &&
-            pos[0] > edges[3][0] && pos[1] < edges[3][1]){
-                return true;
-            }
         return false;
     }
-    this.get_grid = function(pos){
-        for(var i = 0; i<this.grids.length; i++){
-            edges = this.grids[i][0]
-            if(this.in_grid(edges, pos)){
-                return i;
-            }
-        }
-    }
-    this.add_objects = function(objs){
-        for(var i = 0; i<objs.length; i++){
-            pos = objs[i].pos;
-            idx = this.get_grid(pos);
-            this.grids[idx].push(this.objs[i]);
-        }
-    }
-}
-
-
-// ---declare
-var particles = []
-for(var i = 0; i<10; i++){
-    var x = Math.random()*w;
-    var y = Math.random()*h;
-    particles.push(new Particle(x, y, 20));
 }
 
 
 // ---funcs
+function vec_mag(v){
+    var sum = Math.pow(v[0], 2) + Math.pow(v[1], 2);
+    return Math.sqrt(sum);
+}
+function normalise(v){
+    mag = vec_mag(v);
+    return [v[0]/mag, v[1]/mag]
+}
 function dist(v1, v2){
     dx = v1[0] - v2[0];
     dy = v1[1] - v2[1];
@@ -125,23 +87,39 @@ function dist(v1, v2){
 function inv_vec(v1, v2){
     dx = v2[0] - v1[0];
     dy = v2[1] - v1[1];
-    return [dx*-1, dy*-1];
+    // should be normalised
+    return [dx*-1*alpha, dy*-1*alpha];
 }
-function collision_simple(objs){
+function collision_simple(objs, j){
     for(var i = 0; i<objs.length; i++){
-        for(var j = 0; j<objs.length; j++){
-            if(i == j){ continue; }
+        if(i == j || this.marked){ continue; }
 
-            radsum = objs[i].r + objs[j].r;
-            if(dist(objs[i].pos, objs[j].pos) <= radsum){
+        radsum = objs[i].r + objs[j].r;
+        if(dist(objs[i].pos, objs[j].pos) <= radsum){
 
-                inv_aoc = inv_vec(objs[i].pos, objs[j].pos);
-                objs[i].acc = inv_aoc*alpha;
-            }
+            inv_aoc = inv_vec(objs[i].pos, objs[j].pos);
+            objs[i].apply_force(inv_aoc)
+            inv_aoc[0] *= -1
+            inv_aoc[1] *= -1
+            objs[j].apply_force(inv_aoc)
+
+            objs[j].marked = true;
+            //objs[i].vel = inv_aoc;
         }
     }
 }
+function randint(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
+
+// ---declare
+var particles = []
+for(var i = 0; i<10; i++){
+    var x = Math.random()*(w-40);
+    var y = Math.random()*(h-40);
+    particles.push(new Particle(x, y, 20));
+}
 
 // ---animate
 function animate(){
@@ -149,9 +127,20 @@ function animate(){
     c.clearRect(0, 0, w, h)
 
     for(var i = 0; i<particles.length; i++){
-        particles[i].draw();
+        grav = [0, 0.1]
+        particles[i].apply_force(grav)
         particles[i].update();
-        particles[i].edge();
+        if(particles[i].edge()){
+            vel = particles[i].vel
+            friction_force = -1
+
+            friction = normalise(vel)
+            friction[0] *= friction_force
+            friction[1] *= friction_force
+            particles[i].apply_force(friction)
+        }
+        particles[i].draw();
+        collision_simple(particles, i);
     }
 }
 
