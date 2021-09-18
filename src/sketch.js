@@ -137,11 +137,27 @@ for(var i = 0; i<pop; i++){
 
 grav = new Vector2D(0, 0.4)
 
-canvas.addEventListener('mousedown', () => {
+canvas.addEventListener('dblclick', () => {
     for(var i = 0; i<particles.length; i++){
         acc = new Vector2D(randint(-2, 2), -30);
         particles[i].apply_force(acc);
         console.log('hi');
+    }
+});
+canvas.addEventListener('mouseover', (event) => {
+    mouse = new Vector2D(event.clientX, event.clientY)
+    mouse_w = 10;
+    g = 0.01;
+    scalar = (Math.pow(10, 3.5));
+    for(var i = 0; i<particles.length; i++){
+        dir = Vector2D.sub(mouse, particles[i].pos);
+        console.log("\n", dir);
+        d = dir.mag();
+        attract = (g * particles[i].m * mouse_w) / scalar*(d * d);
+
+        dir = dir.normalise();
+        dir.mult(attract);
+        this.particles[i].apply_force(dir);
     }
 });
 
