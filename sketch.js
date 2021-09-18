@@ -159,7 +159,7 @@ function animate(){
         particles[i].update();
 
         if(particles[i].edge()){
-            friction_force = -1
+            friction_force = -0.08
             friction = particles[i].vel.normalise();
 
             friction.mult(friction_force);
