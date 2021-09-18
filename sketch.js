@@ -17,7 +17,7 @@ function Particle(x, y, r){
 
     this.vel = [2, 0];
     this.acc = [0, 0];
-    this.m = randint(0.5, 1);
+    this.m = randint(0.6, 1.2);
 
     this.r = r*this.m;
 
@@ -25,8 +25,22 @@ function Particle(x, y, r){
 
     this.draw = function(){
         c.beginPath();
+        c.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+        c.fillStyle = 'rgba(255, 255, 255, 0.75)';
         c.arc(this.pos[0], this.pos[1], this.r, 0, Math.PI*2, false);
         c.stroke();
+        c.fill();
+        this.glow(47, 23, 0.4*this.r*0.025);
+    }
+    this.glow = function(steps, glow, size){
+        for(var i = 0; i<steps; i++){
+            c.beginPath();
+            opacity = 0.75/(i*glow);
+            rgb = "rgba(220, 190, 230, " + String(opacity) + ")";
+            c.fillStyle = rgb;
+            c.arc(this.pos[0], this.pos[1], this.r*(i*size), 0, Math.PI*2, false);
+            c.fill();
+        }
     }
 
     this.apply_force = function(force){
@@ -121,11 +135,15 @@ for(var i = 0; i<pop; i++){
     var y = Math.random()*(h-40);
     particles.push(new Particle(x, y, 20));
 }
+var emission = [];
+em_r = 2;
+em_count = 4;
 
 // ---animate
 function animate(){
     requestAnimationFrame(animate);
-    c.clearRect(0, 0, w, h)
+    c.fillStyle = 'rgba(8, 2, 18, 0.4)'
+    c.fillRect(0, 0, w, h)
 
     for(var i = 0; i<particles.length; i++){
         grav = [0, 0.1]
@@ -134,7 +152,6 @@ function animate(){
         if(particles[i].edge()){
             vel = particles[i].vel
             friction_force = -1
-
             friction = normalise(vel)
             friction[0] *= friction_force
             friction[1] *= friction_force
