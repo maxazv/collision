@@ -75,8 +75,9 @@ canvas.addEventListener('dblclick', () => {
         console.log('hi');
     }
 });
+
 canvas.addEventListener('mousedown', (event) => {
-    mouse = new Vector2D(event.clientX, event.clientY)
+    mouse = new Vector2D(event.clientX, event.clientY);
     mouse_w = 10;
 
     g = 0.01;
@@ -92,7 +93,24 @@ canvas.addEventListener('mousedown', (event) => {
         this.particles[i].apply_force(dir);
     }
 });
+/*
+canvas.addEventListener('mousedown', (event) => {
+    mouse = new Vector2D(event.clientX, event.clientY);
+    min = 200;
+    idx = -1;
+    for(var i = 0; i<particles.length; i++){
+        loc = particles[i].pos;
+        d = Vector2D.dist(loc, mouse);
 
+        if(d < min){
+            min = d;
+            idx = i;
+        }
+    }
+    if(idx == -1){ return; }
+    particles[idx].pos = mouse;
+});
+*/
 
 // ---animate
 function animate(){
@@ -102,7 +120,6 @@ function animate(){
     //gradient(100, 0.03, rgb);
     c.fillStyle = 'rgba(8, 4, 18, 0.4)'
     c.fillRect(0, 0, _w, _h)
-
     for(var i = 0; i<particles.length; i++){
         particles[i].apply_force(grav)
         particles[i].update();
