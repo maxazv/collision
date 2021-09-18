@@ -46,4 +46,10 @@ class Vector2D{
     static div(v1, scalar){
         return new Vector2D(v1.x/scalar, v1.y/scalar);
     }
+    static mult_vect(v1, v2){
+        return new Vector2D(v1.x*v2.x, v1.y*v2.y);
+    }
+    static mult(v1, scalar){
+        return new Vector2D(v1.x*scalar, v1.y*scalar);
+    }
 }

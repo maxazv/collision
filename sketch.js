@@ -34,10 +34,12 @@ function Particle(x, y, r){
     }
     this.glow = function(steps, glow, gradient, size){
         for(var i = 0; i<steps; i++){
-            l = (steps-i)*gradient
+            l = (steps-i) * gradient
+
             c.beginPath();
-            opacity = 0.7 / ((i/l)*glow);
+            opacity = 0.7 / ((i/l) * glow);
             rgb = "rgba(220, 150, 230, " + String(opacity) + ")";
+
             c.fillStyle = rgb;
             c.arc(this.pos.x, this.pos.y, this.r*(i*size), 0, Math.PI*2, false);
             c.fill();
@@ -91,11 +93,12 @@ function collision_simple(objs, j){
 
             aoc = Vector2D.sub(objs[j].pos, objs[i].pos);
             repell_force = 0.1;
-            aoc.mult(repell_force);
-            objs[j].apply_force(aoc)
-            aoc.mult(-1);
 
-            objs[i].apply_force(aoc)
+            aoc.mult(repell_force);
+            objs[j].apply_force(aoc);
+
+            aoc.mult(-1);
+            objs[i].apply_force(aoc);
 
             objs[j].marked = true;
         }
