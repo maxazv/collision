@@ -21,19 +21,23 @@ class Vector2D{
         this.y /= scalar;
     }
     mag(){
-        sqr_sum = this.x*this.x + this.y*this.y;
+        var sqr_sum = this.x*this.x + this.y*this.y;
         return Math.sqrt(sqr_sum);
     }
     dist(vector){
-        dir = vector.sub(this);
+        var dir = vector.sub(this);
         return dir.mag();
     }
     normalise(){
-        magn = this.mag();
-        return Vector2D(this.x/magn, this.y/magn);
+        var magn = this.mag();
+        return new Vector2D(this.x/magn, this.y/magn);
     }
 
     static sub(v1, v2){
-        vec = Vector2D(v1.x-v2.x, v1.y-v2.y);
+        return new Vector2D(v1.x-v2.x, v1.y-v2.y);
+    }
+    static dir(v1, v2){
+        var dir = Vector2D.sub(v2, v1);
+        return dir.mag();
     }
 }
