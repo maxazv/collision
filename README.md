@@ -2,7 +2,7 @@
 > a bit of tomfoolery
 
 
-+ Selfmade Vector-Class
++ Everything Selfmade
 + Optimisations (soon)
 
 

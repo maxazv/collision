@@ -9,7 +9,7 @@ var _h = 1*scale;
 var c = canvas.getContext('2d');
 
 var pop = 15;
-var xgrid = new Grid(2, _w, _h);
+var grid = new Grid(2, _w, _h);
 
 
 // ---funcs
@@ -31,8 +31,28 @@ function collision_simple(objs, j){
         }
     }
 }
-function collision_grids(objs){
+function collision_grids(){     // FIXME: particle can be on the edge of two grids
+    for(var i = 0; i<grid.grids.length; i++){   // just add particle to all intersect. grids
+        for(var j = 1; j<grid.grids[i].length; j++){
 
+            var frst = grid.grids[i][j];
+            for(var k = 1; k<grid.grids[i].length; k++){
+                scnd = grid.grids[i][k];
+                radsum = frst.r + scnd.r;
+                if(Vector2D.colliding(frst.pos, scnd.pos, radsum)){
+
+                    aoc = Vector2D.sub(scnd.pos, frst.pos);
+                    repell_force = 0.1;
+
+                    aoc.mult(repell_force);
+                    scnd.apply_force(aoc);
+
+                    aoc.mult(-1);
+                    frst.apply_force(aoc);
+                }
+            }
+        }
+    }
 }
 
 function randint(min, max){
@@ -71,7 +91,7 @@ for(var i = 0; i<pop; i++){
     particles.push(new Particle(x, y, 20));
 }
 
-xgrid.update_objs(particles);   // TODO: test properly
+grid.update_objs(particles);   // TODO: test properly
 
 
 // ---events
@@ -122,12 +142,11 @@ canvas.addEventListener('mousedown', (event) => {
 function animate(){
     requestAnimationFrame(animate);
     c.beginPath();
-    //rgb = [8, 4, 15];
-    //gradient(100, 0.03, rgb);
     c.fillStyle = 'rgba(8, 4, 18, 0.4)'
     c.fillRect(0, 0, _w, _h)
+
     for(var i = 0; i<particles.length; i++){
-        particles[i].apply_force(grav)
+        //particles[i].apply_force(grav)
         particles[i].update();
 
         if(particles[i].edge()){
@@ -138,8 +157,10 @@ function animate(){
         }
         particles[i].draw();
 
-        collision_simple(particles, i);
+        //collision_simple(particles, i);
     }
+    collision_grids();
+    grid.update_objs(particles);
 }
 
 animate()
