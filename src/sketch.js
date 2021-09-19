@@ -8,7 +8,8 @@ var _h = 1*scale;
 
 var c = canvas.getContext('2d');
 
-pop = 15;
+var pop = 15;
+var xgrid = new Grid(2, _w, _h);
 
 
 // ---funcs
@@ -30,11 +31,15 @@ function collision_simple(objs, j){
         }
     }
 }
+function collision_grids(objs){
+
+}
+
 function randint(min, max){
     return Math.random() * (max - min) + min;
 }
 function gradient(steps, grad, rgba){
-    loc = y / steps
+    loc = y / steps;
     cop = rgba;
 
     for(var i = 0; i<steps; i++){
@@ -66,6 +71,8 @@ for(var i = 0; i<pop; i++){
     particles.push(new Particle(x, y, 20));
 }
 
+xgrid.update_objs(particles);   // TODO: test properly
+
 
 // ---events
 canvas.addEventListener('dblclick', () => {
@@ -75,7 +82,6 @@ canvas.addEventListener('dblclick', () => {
         console.log('hi');
     }
 });
-
 canvas.addEventListener('mousedown', (event) => {
     mouse = new Vector2D(event.clientX, event.clientY);
     mouse_w = 10;

@@ -1,25 +1,27 @@
-function Grid(size){
+function Grid(size, width, height){
     this.size = size;
     this.grids = []; // [[edges], content...]
+    this.wnd_width = width;
+    this.wnd_height = height;
 
     this.init = function(){
-        stepX = innerWidth/this.size;
-        stepY = innerHeight/this.size;
+        var stepX = this.wnd_width / this.size;
+        var stepY = this.wnd_height / this.size;
         for(var i = 0; i<this.size; i++){
             for(var j = 0; j<this.size; j++){
-                grid = []
+                var grid = [];
 
-                a = (stepX/2);
-                ctrX = stepX*i - a;
-                ctrY = stepY*j - a;
+                var a = stepX/2;
+                var b = stepY/2;
+                var ctrX = stepX * (i+1) - a;
+                var ctrY = stepY * (j+1) - b;
                 
                 edges = [
-                    new Vector2D(ctrX-a, ctrY-a),
-                    new Vector2D(ctrX+a, ctrY-a),
-                    new Vector2D(ctrX+a, ctrY+a),
-                    new Vector2D(ctrX-a, ctrY+a)
+                    new Vector2D(ctrX-a, ctrY-b),
+                    new Vector2D(ctrX+a, ctrY-b),
+                    new Vector2D(ctrX+a, ctrY+b),
+                    new Vector2D(ctrX-a, ctrY+b)
                 ];
-
                 grid.push(edges);
                 this.grids.push(grid);
             }
@@ -28,17 +30,16 @@ function Grid(size){
     this.init();
 
     this.in_grid = function(edges, pos){
-        if (pos[0] > edges[0][0] && pos[1] > edges[0][1] &&
-            pos[0] < edges[1][0] && pos[1] > edges[1][1] &&
-            pos[0] < edges[2][0] && pos[1] < edges[2][1] &&
-            pos[0] > edges[3][0] && pos[1] < edges[3][1]){
+        if (pos.x > edges[0].x && pos.x < edges[2].x &&
+            pos.y > edges[0].y && pos.y < edges[2].y){
                 return true;
             }
         return false;
     }
     this.get_grid = function(pos){
         for(var i = 0; i<this.grids.length; i++){
-            edges = this.grids[i][0]
+
+            var edges = this.grids[i][0];
             if(this.in_grid(edges, pos)){
                 return i;
             }
@@ -46,8 +47,17 @@ function Grid(size){
     }
     this.add_objects = function(objs){
         for(var i = 0; i<objs.length; i++){
-            idx = this.get_grid(objs[i].pos);
-            this.grids[idx].push(this.objs[i]);
+            var idx = this.get_grid(objs[i].pos);
+            this.grids[idx].push(objs[i]);
+        }
+    }
+    this.update_objs = function(objs){
+        this.reset();
+        this.add_objects(objs);
+    }
+    this.reset = function(){
+        for(var i = 0; i<this.grids.length; i++){
+            this.grids[i].splice(1, this.grids[i].length);
         }
     }
 }
