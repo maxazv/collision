@@ -8,8 +8,8 @@ var _h = 1*scale;
 
 var c = canvas.getContext('2d');
 
-var pop = 15;
-var grid = new Grid(2, _w, _h);
+var pop = 50;
+var grid = new Grid(4, _w, _h);
 
 
 // ---funcs
@@ -33,16 +33,16 @@ function collision_simple(objs, j){
 }
 function collision_grids(){     // FIXME: particle can be on the edge of two grids
     for(var i = 0; i<grid.grids.length; i++){   // just add particle to all intersect. grids
-        for(var j = 1; j<grid.grids[i].length; j++){
+        for(var j = 0; j<grid.grids[i].length; j++){
 
             var frst = grid.grids[i][j];
-            for(var k = 1; k<grid.grids[i].length; k++){
+            for(var k = 0; k<grid.grids[i].length; k++){
                 scnd = grid.grids[i][k];
                 radsum = frst.r + scnd.r;
                 if(Vector2D.colliding(frst.pos, scnd.pos, radsum)){
 
                     aoc = Vector2D.sub(scnd.pos, frst.pos);
-                    repell_force = 0.1;
+                    repell_force = 0.001;
 
                     aoc.mult(repell_force);
                     scnd.apply_force(aoc);
@@ -88,7 +88,7 @@ var particles = []
 for(var i = 0; i<pop; i++){
     var x = Math.random() * (_w-40);
     var y = Math.random() * (_h-40);
-    particles.push(new Particle(x, y, 20));
+    particles.push(new Particle(x, y, 10));
 }
 
 grid.update_objs(particles);   // TODO: test properly
@@ -146,7 +146,7 @@ function animate(){
     c.fillRect(0, 0, _w, _h)
 
     for(var i = 0; i<particles.length; i++){
-        //particles[i].apply_force(grav)
+        particles[i].apply_force(grav)
         particles[i].update();
 
         if(particles[i].edge()){
@@ -157,10 +157,10 @@ function animate(){
         }
         particles[i].draw();
 
-        //collision_simple(particles, i);
+        collision_simple(particles, i);
     }
-    collision_grids();
-    grid.update_objs(particles);
+    //collision_grids();
+    //grid.update_objs(particles);
 }
 
 animate()

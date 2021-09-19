@@ -63,4 +63,10 @@ class Vector2D{
         }
         return false;
     }
+    static add(v1, v2){
+        return new Vector2D(v1.x+v2.x, v1.y+v2.y);
+    }
+    static add_scalar(v1, s){
+        return new Vector2D(v1.x+s, v1.y+s);
+    }
 }

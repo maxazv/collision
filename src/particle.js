@@ -1,11 +1,11 @@
-function Particle(x, y){
+function Particle(x, y, r=12.5){
     this.pos = new Vector2D(x, y)
 
     this.vel = new Vector2D(0, 0);
     this.acc = new Vector2D(0, 0);
     this.m = randint(0.6, 1.1);
 
-    this.r = 12.5*this.m;
+    this.r = r*this.m;
 
     this.marked = false;
 
