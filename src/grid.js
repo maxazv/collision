@@ -14,10 +14,10 @@ function Grid(size){
                 ctrY = stepY*j - a;
                 
                 edges = [
-                    [ctrX-a, ctrY-a],
-                    [ctrX+a, ctrY-a],
-                    [ctrX+a, ctrY+a],
-                    [ctrX-a, ctrY+a]
+                    new Vector2D(ctrX-a, ctrY-a),
+                    new Vector2D(ctrX+a, ctrY-a),
+                    new Vector2D(ctrX+a, ctrY+a),
+                    new Vector2D(ctrX-a, ctrY+a)
                 ];
 
                 grid.push(edges);
