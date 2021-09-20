@@ -1,10 +1,10 @@
 var canvas = document.querySelector('canvas');
 
 var scale = 600;
-canvas.width = 1.77*scale;
-canvas.height = 1*scale;
-var _w = 1.77*scale;
-var _h = 1*scale;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var _w = window.innerWidth;
+var _h = window.innerHeight;
 
 var c = canvas.getContext('2d');
 
@@ -82,7 +82,7 @@ function gradient(steps, grad, rgba){
 
 // ---declare
 grav = new Vector2D(0, 0.35);
-friction_force = -0.08;
+friction_force = -0.2;
 
 var particles = []
 for(var i = 0; i<pop; i++){
