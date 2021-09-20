@@ -1,6 +1,6 @@
 function Grid(size, width, height){
     this.size = size;
-    this.grids = []; // length n
+    this.grids = {}; // length n
     this.edges = []; // length n
     this.wnd_width = width;
     this.wnd_height = height;
@@ -67,7 +67,7 @@ function Grid(size, width, height){
         }
     }
     this.update_objs = function(objs){
-        this.grids = Array.apply(null, Array(this.edges.length)).map(c => []); // TODO: hash table
+        this.grids = Array.apply(null, Array(this.edges.length)).map(c => []);
         this.add_objects(objs);
     }
 }
