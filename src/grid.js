@@ -67,7 +67,7 @@ function Grid(size, width, height){
         }
     }
     this.update_objs = function(objs){
-        this.grids = Array.apply(null, Array(this.edges.length)).map(c => []);
+        this.grids = Array.apply(null, Array(this.edges.length)).map(c => []); // TODO: hash table
         this.add_objects(objs);
     }
 }

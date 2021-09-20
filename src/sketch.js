@@ -8,7 +8,7 @@ var _h = 1*scale;
 
 var c = canvas.getContext('2d');
 
-var pop = 50;
+var pop = 15;
 var grid = new Grid(4, _w, _h);
 
 
