@@ -82,7 +82,7 @@ function gradient(steps, grad, rgba){
 
 // ---declare
 grav = new Vector2D(0, 0.35);
-friction_force = -0.2;
+friction_force = -0.6;
 
 var particles = []
 for(var i = 0; i<pop; i++){
@@ -91,7 +91,9 @@ for(var i = 0; i<pop; i++){
     particles.push(new Particle(x, y, 10));
 }
 
-grid.update_objs(particles);   // TODO: test properly
+var rope = new Rope(particles[0], particles[1], 25, 1.5);
+
+//grid.update_objs(particles);
 
 
 // ---events
@@ -142,12 +144,14 @@ canvas.addEventListener('mousedown', (event) => {
 function animate(){
     requestAnimationFrame(animate);
     c.beginPath();
-    c.fillStyle = 'rgba(8, 4, 18, 0.4)'
+    c.fillStyle = 'rgba(8, 4, 10, 0.4)'
     c.fillRect(0, 0, _w, _h)
 
     for(var i = 0; i<particles.length; i++){
         particles[i].apply_force(grav)
         particles[i].update();
+        // rope
+        particles[0].pos = new Vector2D(_w/2, 20);
 
         if(particles[i].edge()){
             friction = particles[i].vel.normalise();
@@ -159,6 +163,8 @@ function animate(){
 
         collision_simple(particles, i);
     }
+    rope.update();
+    rope.draw();
     //collision_grids();
     //grid.update_objs(particles);
 }
